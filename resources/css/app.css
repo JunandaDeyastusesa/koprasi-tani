@@ -1,0 +1,256 @@
+@import "bootstrap/dist/css/bootstrap.min.css";
+@import "bootstrap-icons/font/bootstrap-icons.css";
+
+
+@import url('https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap');
+
+* {
+    margin: 0;
+    padding: 0;
+    font-family: 'Poppins', sans-serif;
+    /* --bs-primary: #780C28; */
+}
+
+body {
+    overflow-x: hidden;
+}
+
+.navbar {
+    border: 1px solid #bad1ac;
+    margin-left: -13px;
+    margin-right: -13px;
+    padding-left: 13px;
+    padding-right: 13px;
+}
+
+.btn-primary{
+    background-color: #5d7010 !important;
+    border: none !important;
+}
+.btn-primary:hover {
+    background-color: #50610d !important;
+    border: none !important;
+}
+
+.btn-add {
+    background-color: #780C28;
+    color: #fff;
+    font-weight: 300;
+    font-size: 16px;
+    transition: 0.3s ease-in;
+}
+
+.btn-add:hover {
+    background-color: #600A20;
+    color: #fff;
+    font-weight: 300;
+    font-size: 16px;
+}
+
+.btn-detail {
+    border: 1px solid #92af1d;
+    background-color: #92af1d;
+    transition: 0.3s ease-in;
+    margin-right: 3px;
+}
+
+.btn-detail:hover {
+    border: 1px solid #7d9715;
+    background-color: #7d9715;
+}
+
+.btn-edit {
+    border: 1px solid #dad74f;
+    background-color: #dad74f;
+    transition: 0.3s ease-in;
+    margin-right: 3px;
+}
+
+.btn-edit:hover {
+    border: 1px solid #cfc352;
+    background-color: #cfc352;
+}
+
+.btn-hapus {
+    border: 1px solid #e78e8e;
+    background-color: #e78e8e;
+    transition: 0.3s ease-in;
+    margin-right: 3px;
+}
+
+.btn-hapus:hover {
+    border: 1px solid #cf5252;
+    background-color: #cf5252;
+}
+
+/* === STYLE DATATABLES === */
+.dataTables_length {
+    padding-top: 0px !important;
+    padding-bottom: 30px !important;
+}
+
+.dataTables_wrapper .dataTables_filter input  {
+    /* width: 300px; */
+    border-radius: 15px;
+    padding: 6px 12px;
+    border-color: #E9D8DD;
+}
+
+.head-table th {
+    border: 2.5px solid #fff;
+    background-color: #DCE1CA !important;
+    color: #000 !important;
+    font-size: 16px !important;
+    font-weight: 600 !important;
+}
+
+.body-teble td {
+    border: 2.5px solid #fff;
+    background-color: #F3F8F3 !important;
+    color: #000 !important;
+    font-size: 14px !important;
+    font-weight: 500 !important;
+}
+
+.dataTables_filter {
+    text-align: left !important;
+}
+
+.dt-paging-button.page-item.active .page-link {
+    background-color: #5A091E !important;
+    color: #fff !important;
+    border: #5A091E;
+}
+.dt-paging-button.page-item .page-link{
+    color: #5A091E !important;
+}
+.dataTables_info, .dataTables_paginate {
+    padding-top: 30px !important;
+}
+
+.table.dataTable.no-footer{
+    border: none !important;
+}
+
+.table.dataTable>thead>tr>th, table.dataTable>thead>tr>td{
+    border-bottom: none !important;
+}
+
+/* === END DATATABLES === */
+
+
+.sidebar {
+    background-color: #627513;
+    min-height: 100vh;
+
+    .side-logo {
+        width: 160px;
+        margin-top: 16px;
+    }
+    .nav{
+        margin-top: 40px;
+    }
+
+    .nav-item {
+        margin-bottom: 12px;
+        transition: 0.3s ease-in-out;
+        border-radius: 3px 20px 20px 3px;
+
+        a {
+            text-decoration: none;
+            color: white;
+            font-weight: 500;
+            font-size: 15px;
+        }
+    }
+
+    .nav-item:hover {
+        margin-bottom: 12px;
+        margin-bottom: 12px;
+        background-color: #fff;
+        border-radius: 3px 20px 20px 3px;
+
+        a {
+            text-decoration: none;
+            color: #627513;
+            font-weight: 600;
+            font-size: 15px;
+        }
+    }
+
+    .nav-link.active {
+        background-color: #fff !important;
+        /* Warna merah untuk menu aktif */
+        color: #627513 !important;
+        /* Warna teks putih agar kontras */
+        border-radius: 3px 20px 20px 3px;
+        font-weight: 600;
+        font-size: 15px;
+        /* display: flex; */
+        /* align-items: center; */
+        /* padding-top: 12px; */
+        /* padding-bottom: 12px; */
+    }
+}
+
+.dashboard-admin{
+    .card {
+        border-radius: 16px;
+        background-color: #F3F8F3;
+
+        .card-title{
+            font-size: 16px !important;
+        }
+
+        .card-text {
+            font-size: 20px !important;
+            font-weight: 600;
+        }
+    }
+    .text-bg-primary{
+        background-color: #DCE1CA !important;
+        border: none !important;
+        color: #000 !important;
+    }
+    .text-bg-secondary{
+        background-color: #ECF2E7 !important;
+        border: none !important;
+        color: #000 !important;
+    }
+}
+
+.apexcharts-graphical .apexcharts-line-series {
+    path {
+        stroke: #5A091E;
+    }
+
+    span {
+        color: #5A091E;
+    }
+}
+
+.apexcharts-tooltip {
+    .apexcharts-tooltip-series-group {
+        span::before {
+            color: #5A091E;
+        }
+    }
+}
+
+
+#detailsModal {
+    .modal-body {
+        .card {
+            label {
+                /* color: #5A091E; */
+                font-weight: 600;
+                margin-bottom: 0;
+                font-size: 14px;
+            }
+
+            p {
+                font-size: 15px;
+            }
+        }
+    }
+}

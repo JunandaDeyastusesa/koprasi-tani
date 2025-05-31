@@ -15,6 +15,7 @@ class Transaksi extends Model
         'inventari_id',
         'jumlah',
         'total_harga',
+        'tgl_transaksi',
     ];
 
     public function mitra()
@@ -24,5 +25,9 @@ class Transaksi extends Model
     public function inventaris()
     {
         return $this->belongsTo(Inventaris::class, 'inventari_id', 'id');
+    }
+    public function user()
+    {
+        return $this->belongsTo(User::class, 'user_id', 'id');
     }
 }

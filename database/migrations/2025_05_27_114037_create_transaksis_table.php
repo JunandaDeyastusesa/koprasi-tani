@@ -13,10 +13,13 @@ return new class extends Migration
     {
         Schema::create('transaksis', function (Blueprint $table) {
             $table->ulid('id')->primary();
-            $table->foreignUlid('mitra_id')->constrained('mitras')->restrictOnDelete();
-            $table->foreignUlid('inventari_id')->constrained('inventaries')->restrictOnDelete();
+            $table->foreignUlid('mitra_id')->nullable()->constrained('mitras')->nullOnDelete();
+            $table->foreignId('user_id')->nullable()->constrained('users')->nullOnDelete();
+            $table->foreignUlid('inventari_id')->nullable()->constrained('inventaries')->nullOnDelete();
             $table->unsignedBigInteger('jumlah');
             $table->unsignedBigInteger('total_harga');
+            $table->date('tgl_transaksi');
+            $table->string('status')->nullable();
             $table->timestamps();
         });
     }

@@ -20,4 +20,9 @@ class Inventaris extends Model
         'jumlah',
         'deskripsi',
     ];
+
+    public function transaksis()
+    {
+        return $this->hasMany(Transaksi::class, 'inventari_id', 'id');
+    }
 }
