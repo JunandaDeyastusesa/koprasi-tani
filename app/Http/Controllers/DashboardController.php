@@ -91,17 +91,13 @@ class DashboardController extends Controller
             return view('dashboard.admin', compact('pageTitle', 'data'));
         }
 
-        // Jika role adalah Member
         if ($role === 'Member') {
-            $pageTitle = 'Dashboard Member';
+            $pageTitle = 'Produk yang tersedia';
             $inventaries = Inventaris::all();
 
-            // Kamu bisa sesuaikan isi dashboard.member di sini
             return view('dashboard.member', compact('pageTitle', 'inventaries'));
-            // return view('dashboard.member', ['pageTitle' => $pageTitle, 'inventaries' => $inventaries]);
         }
 
-        // Fallback jika role tidak dikenali
         abort(403, 'Akses ditolak.');
     }
 

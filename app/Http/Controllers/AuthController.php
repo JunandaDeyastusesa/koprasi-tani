@@ -36,9 +36,9 @@ class AuthController extends Controller
             $user->roles()->attach($role->id);
         }
 
-        Auth::login($user); // Langsung login setelah register
+        Auth::login($user);
 
-        return redirect()->route('dashboard.admin')->with('success', 'Pendaftaran berhasil');
+        return redirect()->route('dashboard.index')->with('success', 'Pendaftaran berhasil');
     }
 
     public function showLoginForm()

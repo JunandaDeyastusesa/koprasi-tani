@@ -5,7 +5,7 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <link rel="icon" href="{{ asset('images/logo.png') }}" type="image/png">
-    <title>Login</title>
+    <title>Register</title>
     <!-- Bootstrap 5 CSS CDN -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" />
     <style>
@@ -35,7 +35,7 @@
             border: none !important;
         }
 
-        .text-primary {
+        .text-primary{
             color: #5d7010 !important;
         }
 
@@ -47,20 +47,38 @@
 
 <body>
     <div class="login-card shadow-sm">
-        <h3 class="mb-5 text-center fw-bold">Login</h3>
-        <form method="POST" action="{{ route('login') }}">
+        <h3 class="mb-4 text-center fw-bold">Daftar Anggota</h3>
+        <form method="POST" action="{{ route('register') }}">
             @csrf
-            <div class="mb-4">
-                <label for="email" class="form-label fw-semibold">Email address</label>
+
+            <div class="mb-3">
+                <label for="name" class="form-label fw-semibold">Nama Lengkap</label>
+                <input type="text" class="form-control @error('name') is-invalid @enderror" id="name"
+                    name="name" placeholder="nama Lengkap" value="{{ old('name') }}" required />
+                @error('name')
+                    <div class="invalid-feedback">{{ $message }}</div>
+                @enderror
+            </div>
+
+            <div class="mb-3">
+                <label for="username" class="form-label fw-semibold">Username</label>
+                <input type="text" class="form-control @error('username') is-invalid @enderror" id="username"
+                    name="username" placeholder="username" value="{{ old('username') }}" required />
+                @error('username')
+                    <div class="invalid-feedback">{{ $message }}</div>
+                @enderror
+            </div>
+
+            <div class="mb-3">
+                <label for="email" class="form-label fw-semibold">Email</label>
                 <input type="email" class="form-control @error('email') is-invalid @enderror" id="email"
-                    name="email" placeholder="your.email@example.com" value="{{ old('email') }}" required
-                    autofocus />
+                    name="email" placeholder="your.email@example.com" value="{{ old('email') }}" required />
                 @error('email')
                     <div class="invalid-feedback">{{ $message }}</div>
                 @enderror
             </div>
 
-            <div class="mb-4">
+            <div class="mb-3">
                 <label for="password" class="form-label fw-semibold">Password</label>
                 <input type="password" class="form-control @error('password') is-invalid @enderror" id="password"
                     name="password" placeholder="Enter your password" required />
@@ -69,16 +87,18 @@
                 @enderror
             </div>
 
-            @if (session('error'))
-                <div class="alert alert-danger text-center">{{ session('error') }}</div>
-            @endif
+            <div class="mb-4">
+                <label for="password_confirmation" class="form-label fw-semibold">Confirm Password</label>
+                <input type="password" class="form-control" id="password_confirmation" name="password_confirmation"
+                    placeholder="Repeat your password" required />
+            </div>
 
-            <button type="submit" class="btn btn-primary mt-4 mb-3 w-100 fw-semibold">Login</button>
+            <button type="submit" class="btn btn-primary mt-3 w-100 fw-semibold">Register</button>
         </form>
 
         <p class="text-center mt-4 mb-0">
-            Belum punya akun? <a href="{{ route('register') }}"
-                class="text-primary text-decoration-none fw-semibold">Sign Up</a>
+            Sudah punya akun?
+            <a href="{{ route('login') }}" class="text-primary text-decoration-none fw-semibold">Login</a>
         </p>
     </div>
 
