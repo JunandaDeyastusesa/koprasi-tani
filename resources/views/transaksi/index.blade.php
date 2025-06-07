@@ -26,32 +26,21 @@
                             @foreach ($transaksis as $index => $transaksi)
                                 <tr class="body-teble">
                                     <td class="text-center">{{ $index + 1 }}</td>
-                                    <td>{{ $transaksi->mitra->nama ?? $transaksi->user->name ?? '-' }}</td>
+                                    <td>{{ $transaksi->mitra->nama ?? ($transaksi->user->name ?? '-') }}</td>
                                     <td>{{ $transaksi->inventaris->nama ?? '-' }}</td>
                                     <td class="text-center col-1">{{ $transaksi->jumlah }}</td>
                                     <td>Rp. {{ number_format($transaksi->total_harga, 0, '.', '.') }},-</td>
                                     <td class="text-center">{{ $transaksi->status }}</td>
-                                    <td class="text-center">{{ \Carbon\Carbon::parse($transaksi->tgl_transaksi)->format('d - m - Y') }}</td>
+                                    <td class="text-center">
+                                        {{ \Carbon\Carbon::parse($transaksi->tgl_transaksi)->format('d - m - Y') }}</td>
 
-                                    <td class="text-center px-1 d-flex justify-content-center">
-                                        <a href="#" class="btn btn-sm btn-detail me-2"
-                                            data-id="{{ $transaksi->id }}">
+                                    <td class="text-center px-2 d-flex justify-content-center">
+                                        <a href="#" class="btn btn-sm btn-detail mx-2" data-id="{{ $transaksi->id }}">
                                             <i class=" bi bi-eye text-white"></i>
                                         </a>
                                         <a href="#" class="btn btn-sm btn-edit me-2" data-id="{{ $transaksi->id }}">
                                             <i class=" bi bi-pencil-square text-white"></i>
                                         </a>
-                                        <div>
-                                            <form action="{{ route('transaksi.destroy', ['transaksi' => $transaksi->id]) }}"
-                                                method="POST" class="delete-form">
-                                                @csrf
-                                                @method('DELETE')
-                                                <button type="button" class="btn btn-outline-dark btn-sm me-2 btn-hapus"
-                                                    data-id="{{ $transaksi->id }}">
-                                                    <i class="bi bi-trash-fill text-white"></i>
-                                                </button>
-                                            </form>
-                                        </div>
                                     </td>
                                 </tr>
                             @endforeach
@@ -129,32 +118,6 @@
                         if (modalElement) {
                             let myModal = new bootstrap.Modal(modalElement);
                             myModal.show();
-                        }
-                    });
-                });
-            });
-        });
-    </script>
-    <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            const hapusButtons = document.querySelectorAll('.btn-hapus');
-
-            hapusButtons.forEach(button => {
-                button.addEventListener('click', function() {
-                    const form = this.closest('form');
-
-                    Swal.fire({
-                        title: 'Apakah kamu yakin?',
-                        text: "Data akan dihapus permanen!",
-                        icon: 'warning',
-                        showCancelButton: true,
-                        confirmButtonColor: '#d33',
-                        cancelButtonColor: '#3085d6',
-                        confirmButtonText: 'Ya, hapus!',
-                        cancelButtonText: 'Batal'
-                    }).then((result) => {
-                        if (result.isConfirmed) {
-                            form.submit();
                         }
                     });
                 });

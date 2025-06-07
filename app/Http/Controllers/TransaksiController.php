@@ -142,7 +142,8 @@ class TransaksiController extends Controller
     public function update(Request $request, string $id)
     {
         $request->validate([
-            'mitra_id' => 'required|exists:mitras,id',
+            'mitra_id' => 'nullable|exists:mitras,id',
+            'user_id' => 'nullable|exists:users,id',
             'inventari_id' => 'required|exists:inventaries,id',
             'jumlah' => 'required|integer|min:1',
             'total_harga' => 'required|integer|min:1',
@@ -151,7 +152,38 @@ class TransaksiController extends Controller
         ]);
 
         $transaksi = Transaksi::findOrFail($id);
+        $inventaris = Inventaris::findOrFail($request->inventari_id);
+
+        // Cek apakah status atau jumlah berubah
+        $jumlahLama = $transaksi->jumlah;
+        $statusLama = $transaksi->status;
+        $jumlahBaru = $request->jumlah;
+        $statusBaru = $request->status;
+
+        // Rollback stok berdasarkan transaksi sebelumnya
+        if ($statusLama === 'Penjualan') {
+            $inventaris->jumlah += $jumlahLama;
+        } elseif ($statusLama === 'Pembelian') {
+            $inventaris->jumlah -= $jumlahLama;
+        }
+
+        // Update stok berdasarkan transaksi baru
+        if ($statusBaru === 'Penjualan') {
+            if ($inventaris->jumlah < $jumlahBaru) {
+                return redirect()->back()->with('error', 'Stok tidak mencukupi untuk transaksi ini.');
+            }
+            $inventaris->jumlah -= $jumlahBaru;
+        } elseif ($statusBaru === 'Pembelian') {
+            $inventaris->jumlah += $jumlahBaru;
+        } else {
+            return redirect()->back()->with('error', 'Status transaksi tidak valid.');
+        }
+
+        $inventaris->save();
+
+        // Simpan perubahan transaksi
         $transaksi->mitra_id = $request->input('mitra_id');
+        $transaksi->user_id = $request->input('user_id');
         $transaksi->inventari_id = $request->input('inventari_id');
         $transaksi->jumlah = $request->input('jumlah');
         $transaksi->total_harga = $request->input('total_harga');
@@ -160,16 +192,5 @@ class TransaksiController extends Controller
         $transaksi->save();
 
         return redirect()->route('transaksi.index')->with('success', 'Data transaksi berhasil diperbarui.');
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(string $id)
-    {
-        $transaksi = Transaksi::findOrFail($id);
-        $transaksi->delete();
-
-        return redirect()->route('transaksi.index')->with('success', 'Data transaksi berhasil dihapus.');
     }
 }

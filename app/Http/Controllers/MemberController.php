@@ -19,9 +19,6 @@ class MemberController extends Controller
         $users = User::with('roles')->whereHas('roles', function ($query) {
             $query->where('nama', 'Member');
         })->get();
-        if ($users->isEmpty()) {
-            return response()->json(['message' => 'Tidak ada member ditemukan'], 404);
-        }
         return view('member.index', ['pageTitle' => $pageTitle, 'users' => $users]);
     }
 
@@ -57,19 +54,6 @@ class MemberController extends Controller
         return redirect()->route('members.index')->with('success', 'Pendaftaran berhasil sebagai ' . $request->role);
     }
 
-
-    /**
-     * Display the specified resource.
-     */
-    public function show(string $id)
-    {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     */
-
     public function edit($id)
     {
         $user = User::findOrFail($id);
@@ -101,10 +85,6 @@ class MemberController extends Controller
         return redirect()->route('members.index')->with('success', 'Data berhasil diperbarui');
     }
 
-
-    /**
-     * Remove the specified resource from storage.
-     */
     public function destroy(string $id)
     {
         $user = User::findOrFail($id);

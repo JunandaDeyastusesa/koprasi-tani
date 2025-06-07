@@ -25,7 +25,7 @@
                             <label for="kategori" class="form-label">Kategori</label>
                             <input type="text" name="kategori" id="kategori"
                                 class="form-control @error('kategori') is-invalid @enderror"
-                                value="{{ old('kategori') }}" placeholder="Masukkan kategori (Opsional)">
+                                value="{{ old('kategori') }}" placeholder="Masukkan kategori" required>
                             @error('kategori')
                                 <span class="text-danger small">{{ $message }}</span>
                             @enderror
@@ -64,7 +64,7 @@
                         <div class="mb-3 col-md-12">
                             <label for="deskripsi" class="form-label">Deskripsi</label>
                             <textarea name="deskripsi" id="deskripsi" class="form-control @error('deskripsi') is-invalid @enderror"
-                                placeholder="Masukkan deskripsi produk (Opsional)">{{ old('deskripsi') }}</textarea>
+                                placeholder="Masukkan deskripsi produk" required>{{ old('deskripsi') }}</textarea>
                             @error('deskripsi')
                                 <span class="text-danger small">{{ $message }}</span>
                             @enderror
