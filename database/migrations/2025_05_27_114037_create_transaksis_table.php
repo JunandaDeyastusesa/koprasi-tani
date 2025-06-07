@@ -15,7 +15,7 @@ return new class extends Migration
             $table->ulid('id')->primary();
             $table->foreignUlid('mitra_id')->nullable()->constrained('mitras')->nullOnDelete();
             $table->foreignId('user_id')->nullable()->constrained('users')->nullOnDelete();
-            $table->foreignUlid('inventari_id')->nullable()->constrained('inventaries')->nullOnDelete();
+            $table->foreignUlid('inventari_id')->nullable()->constrained('inventaris')->nullOnDelete();
             $table->unsignedBigInteger('jumlah');
             $table->unsignedBigInteger('total_harga');
             $table->date('tgl_transaksi');

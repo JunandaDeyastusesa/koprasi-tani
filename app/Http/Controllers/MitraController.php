@@ -14,9 +14,6 @@ class MitraController extends Controller
     {
         $pageTitle = 'Data Mitra';
         $mitras = Mitra::all();
-        // Assuming you have a model named Mitra
-        // $mitras = Mitra::all(); // Fetch all mitra records
-        // return view('mitra.index', ['pageTitle' => $pageTitle, 'mitras' => $mitras]);
 
         // For now, just returning a view with the page title
         return view('mitra.index', ['pageTitle' => $pageTitle, 'mitras' => $mitras]);

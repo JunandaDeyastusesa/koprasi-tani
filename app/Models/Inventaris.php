@@ -10,13 +10,13 @@ class Inventaris extends Model
 {
     use HasFactory, HasUlids;
 
-    protected $table = 'inventaries';
+    protected $table = 'inventaris';
 
     protected $fillable = [
         'nama',
         'kategori',
         'harga_beli',
-        'herga_jual',
+        'harga_jual',
         'jumlah',
         'deskripsi',
     ];
