@@ -29,8 +29,6 @@ Route::middleware(['auth'])->group(function () {
         return redirect()->route('dashboard.index');
     });
     Route::get('/transaksi-member', [TransaksiController::class, 'viewTransaksiMember'])->name('viewTransaksiMember');
-
-
     Route::resource('members', MemberController::class);
     Route::resource('mitras', MitraController::class);
     Route::resource('inventaris', InventarisController::class);

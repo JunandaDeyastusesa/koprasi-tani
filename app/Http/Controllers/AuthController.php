@@ -18,15 +18,15 @@ class AuthController extends Controller
     public function register(Request $request)
     {
         $request->validate([
-            'name'     => 'required|string|max:255',
-            'email'    => 'required|email|unique:users,email',
+            'name' => 'required|string|max:255',
+            'email' => 'required|email|unique:users,email',
             'username' => 'required|string|unique:users,username',
             'password' => 'required|min:6|confirmed',
         ]);
 
         $user = User::create([
-            'name'     => $request->name,
-            'email'    => $request->email,
+            'name' => $request->name,
+            'email' => $request->email,
             'username' => $request->username,
             'password' => Hash::make($request->password),
         ]);
@@ -38,7 +38,7 @@ class AuthController extends Controller
 
         Auth::login($user); // Langsung login setelah register
 
-        return redirect()->route('dashboard.admin')->with('success', 'Pendaftaran berhasil');
+        return redirect()->route('dashboard.index')->with('success', 'Pendaftaran berhasil');
     }
 
     public function showLoginForm()
@@ -49,7 +49,7 @@ class AuthController extends Controller
     public function login(Request $request)
     {
         $credentials = $request->validate([
-            'email'    => 'required|email',
+            'email' => 'required|email',
             'password' => 'required',
         ]);
 

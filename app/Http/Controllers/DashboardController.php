@@ -15,41 +15,6 @@ class DashboardController extends Controller
     /**
      * Display a listing of the resource.
      */
-    // public function index()
-    // {
-    //     $pageTitle = 'Dashboard';
-
-    //     $transaksi = Transaksi::all();
-    //     $inventaris = Inventaris::all();
-    //     $mitras = Mitra::all();
-
-    //     $users = User::with('roles')->whereHas('roles', function ($query) {
-    //         $query->where('nama', 'Member');
-    //     })->get();
-
-    //     $total_pemasukan = $transaksi->where('status', 'Penjualan')->sum('total_harga');
-    //     $total_pembelian = $transaksi->where('status', 'Pembelian')->sum('total_harga');
-
-    //     $penjualan = $transaksi->where('status', 'Penjualan')->sortByDesc('tgl_transaksi')->take(10);
-
-    //     $pengeluaran = $transaksi->where('status', 'Pembelian')->sortByDesc('tgl_transaksi')->take(10);
-
-    //     $jumlah_member = $users->count();
-
-    //     $keuntungan = $total_pemasukan - $total_pembelian;
-
-    //     $data['total_pemasukan'] = $total_pemasukan;
-    //     $data['jumlah_member'] = $jumlah_member;
-    //     $data['keuntungan'] = $keuntungan;
-    //     $data['total_pembelian'] = $total_pembelian;
-    //     $data['penjualan'] = $penjualan;
-    //     $data['pengeluaran'] = $pengeluaran;
-
-
-
-    //     return view('dashboard.admin', ['pageTitle' => $pageTitle, 'data' => $data]);
-    // }
-
 
     public function index()
     {
@@ -93,12 +58,11 @@ class DashboardController extends Controller
 
         // Jika role adalah Member
         if ($role === 'Member') {
-            $pageTitle = 'Dashboard Member';
+            $pageTitle = 'Produk yang tersedia';
             $inventaries = Inventaris::all();
 
             // Kamu bisa sesuaikan isi dashboard.member di sini
             return view('dashboard.member', compact('pageTitle', 'inventaries'));
-            // return view('dashboard.member', ['pageTitle' => $pageTitle, 'inventaries' => $inventaries]);
         }
 
         // Fallback jika role tidak dikenali
