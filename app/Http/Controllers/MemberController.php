@@ -33,12 +33,23 @@ class MemberController extends Controller
     {
         $request->validate([
             'name'     => 'required|string|max:255',
-            'email'    => 'required|email|unique:users,email',
-            'username' => 'required|string|unique:users,username',
+            'email'    => 'required|email',
+            'username' => 'required|string',
             'password' => 'required|min:6|confirmed',
-            'role'     => 'required|in:Member,Admin', // Validasi tambahan
+            'role'     => 'required|in:Member,Admin',
         ]);
 
+        // Cek jika email sudah ada
+        if (User::where('email', $request->email)->exists()) {
+            return redirect()->back()->with('error', 'Email sudah digunakan, silakan gunakan email lain.');
+        }
+
+        // Cek jika username sudah ada
+        if (User::where('username', $request->username)->exists()) {
+            return redirect()->back()->with('error', 'Username sudah digunakan, silakan pilih username lain.');
+        }
+
+        // Simpan user baru
         $user = User::create([
             'name'     => $request->name,
             'email'    => $request->email,
@@ -46,6 +57,7 @@ class MemberController extends Controller
             'password' => Hash::make($request->password),
         ]);
 
+        // Tambahkan role
         $role = Role::where('nama', $request->role)->first();
         if ($role) {
             $user->roles()->attach($role->id);
@@ -53,6 +65,7 @@ class MemberController extends Controller
 
         return redirect()->route('members.index')->with('success', 'Pendaftaran berhasil sebagai ' . $request->role);
     }
+
 
     public function edit($id)
     {
