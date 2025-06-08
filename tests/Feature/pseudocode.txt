@@ -1,0 +1,234 @@
+if data login valid:
+    if autentikasi berhasil:
+        if role == 'Admin':
+            # Mulai fungsi index() Admin
+            Set judul halaman: 'Dashboard Admin'
+            Ambil semua data transaksi
+            Ambil semua data inventaris
+            Ambil semua data mitra
+            Ambil semua user dengan role 'Member'
+            Hitung total pemasukan dari transaksi 'Penjualan'
+            Hitung total pembelian dari transaksi 'Pembelian'
+            Ambil 10 transaksi terakhir 'Penjualan'
+            Ambil 10 transaksi terakhir 'Pembelian'
+            Hitung jumlah member
+            Hitung keuntungan: pemasukan - pembelian
+            Siapkan variabel data dengan:
+                - total_pemasukan
+                - jumlah_member
+                - keuntungan
+                - total_pembelian
+                - penjualan
+                - pengeluaran
+            Tampilkan view 'dashboard.admin' dengan pageTitle + data
+            # Selesai fungsi index() Admin
+            
+            # Inventaris
+            if akses == '/inventaris':
+                if method == 'GET':
+                    if action == 'index':
+                        Set judul halaman = "Data Inventaris"
+                        Ambil semua data inventaris
+                        Tampilkan view 'inventaris.index' dengan data dan judul
+                    elif action == 'create':
+                        Set judul halaman = "Tambah Inventaris"
+                        Tampilkan view 'inventaris.create' dengan data dan judul
+                    elif action == 'show':
+                        Cari data inventaris berdasarkan ID
+                        Set judul halaman = "Detail Inventaris"
+                        Tampilkan view 'inventaris.show' dengan data dan judul
+                    elif action == 'edit':
+                        Cari data inventaris berdasarkan ID
+                        Set judul halaman = "Edit Inventaris"
+                        Tampilkan view 'inventaris.edit' dengan data dan judul
+                elif method == 'POST':
+                    if action == 'store':
+                        Validasi input:
+                            - nama: wajib, maks 255 karakter
+                            - kategori: wajib, maks 255 karakter
+                            - harga_jual & harga_beli: wajib, minimal 1
+                            - jumlah: wajib, minimal 1
+                            - deskripsi: wajib, maks 255 karakter
+                        Buat objek Inventaris baru
+                        Isi properti dari inputan
+                        Simpan ke database
+                        Redirect ke halaman index dengan pesan sukses
+                    elif action == 'update':
+                        Validasi input sama seperti store()
+                        Cari inventaris berdasarkan ID
+                        Update properti
+                        Simpan perubahan
+                        Redirect ke halaman index dengan pesan sukses
+                    elif action == 'destroy':
+                        Cari inventaris berdasarkan ID
+                        Hapus data
+                        Redirect ke halaman index dengan pesan sukses
+            
+            # Member
+            if akses == '/members':
+                if method == 'GET':
+                    if action == 'index':
+                        Set judul halaman = "Data Member"
+                        Ambil semua user dengan role 'Member'
+                        Jika data kosong:
+                            Kembalikan "Tidak ada member ditemukan"
+                        Tampilkan view 'member.index' dengan judul dan data
+                    elif action == 'create':
+                        Set judul halaman = "Add member"
+                        Ambil semua user
+                        Tampilkan view 'member.create' dengan data dan judul
+                    elif action == 'edit':
+                        Cari user berdasarkan ID
+                        Tampilkan view 'member.edit' dengan data user
+                elif method == 'POST':
+                    if action == 'store':
+                        Validasi input:
+                            - name: wajib, maks 255 karakter
+                            - email: wajib, unik
+                            - username: wajib, unik
+                            - password: wajib, minimal 6 karakter
+                            - role: wajib ('Member' atau 'Admin')
+                        Buat user baru
+                        Enkripsi password
+                        Cari role berdasarkan nama
+                        Jika role ditemukan:
+                            Hubungkan user dengan role
+                        Redirect ke members.index dengan pesan sukses
+                    elif action == 'update':
+                        Validasi input:
+                            - name: wajib
+                            - email: wajib, unik kecuali milik user ini
+                            - username: wajib, unik kecuali milik user ini
+                            - password: opsional, minimal 6 karakter
+                        Cari user berdasarkan ID
+                        Update data user
+                        Jika password diisi:
+                            Enkripsi dan simpan password baru
+                        Simpan perubahan
+                        Redirect ke members.index dengan pesan sukses
+                    elif action == 'destroy':
+                        Cari user berdasarkan ID
+                        Jika user memiliki role 'Member':
+                            Lepaskan relasi role
+                        Hapus user
+                        Redirect ke members.index dengan pesan sukses
+            
+            # Mitra
+            if akses == '/mitras':
+                if method == 'GET':
+                    if action == 'index':
+                        Set judul halaman = "Data Mitra"
+                        Ambil semua data mitra
+                        Tampilkan view 'mitra.index' dengan data dan judul
+                    elif action == 'create':
+                        Set judul halaman = "Tambah Mitra"
+                        Tampilkan view 'mitra.create' dengan judul
+                    elif action == 'edit':
+                        Cari data mitra berdasarkan ID
+                        Set judul halaman = "Edit Mitra"
+                        Tampilkan view 'mitra.edit' dengan data dan judul
+                elif method == 'POST':
+                    if action == 'store':
+                        Validasi input:
+                            - nama: wajib, maks 255 karakter
+                            - email: wajib, unik
+                            - no_hp: wajib, maks 15 karakter
+                            - alamat: wajib, maks 255 karakter
+                        Buat objek Mitra baru
+                        Isi data dari request
+                        Simpan ke database
+                        Redirect ke mitras.index dengan pesan sukses
+                    elif action == 'update':
+                        Validasi input:
+                            - nama: wajib
+                            - email: wajib, unik kecuali milik mitra ini
+                            - no_hp: wajib
+                            - alamat: wajib
+                        Cari mitra berdasarkan ID
+                        Update field
+                        Simpan perubahan
+                        Redirect ke mitras.index dengan pesan sukses
+                    elif action == 'destroy':
+                        Cari mitra berdasarkan ID
+                        Hapus data
+                        Redirect ke mitras.index dengan pesan sukses
+            
+            # Transaksi
+            if akses == '/transaksi':
+                if method == 'GET':
+                    if action == 'index':
+                        Set judul halaman = "Data Transaksi"
+                        Ambil semua data transaksi
+                        Ambil semua data mitra dan inventaris
+                        Tampilkan view 'transaksi.index' dengan data dan judul
+                    elif action == 'viewTransaksiMember':
+                        Set judul halaman = "Data Transaksi"
+                        Ambil transaksi berdasarkan user_id yang login
+                        Ambil data mitra dan inventaris
+                        Tampilkan view 'transaksi.transaksiMember' dengan data dan judul
+                    elif action == 'create':
+                        Set judul halaman = "Tambah Transaksi"
+                        Ambil semua mitra, inventaris, dan user Member
+                        Tampilkan view 'transaksi.create' dengan data dan judul
+                    elif action == 'show':
+                        Set judul halaman = "Detail Transaksi"
+                        Ambil transaksi berdasarkan ID
+                        Ambil mitra, user, dan inventaris terkait
+                        Tampilkan view 'transaksi.show' dengan data dan judul
+                    elif action == 'edit':
+                        Set judul halaman = "Edit Transaksi"
+                        Ambil transaksi berdasarkan ID
+                        Ambil mitra, inventaris, dan user Member
+                        Tampilkan view 'transaksi.edit' dengan data
+                elif method == 'POST':
+                    if action == 'store':
+                        Validasi input:
+                            - mitra_id: nullable
+                            - user_id: nullable
+                            - inventari_id: wajib
+                            - jumlah: wajib, minimal 1
+                            - total_harga: wajib, minimal 1
+                            - tgl_transaksi: wajib
+                            - status: wajib
+                        Ambil data inventaris
+                        Jika status == "Penjualan":
+                            Jika stok < jumlah:
+                                Kembalikan error
+                            Kurangi stok
+                        Jika status == "Pembelian":
+                            Tambah stok
+                        Simpan perubahan inventaris
+                        Buat objek Transaksi baru
+                        Isi field dari request
+                        Simpan transaksi
+                        Redirect ke transaksi.index dengan pesan sukses
+                    elif action == 'update':
+                        Validasi input seperti store()
+                        Ambil transaksi berdasarkan ID
+                        Update field
+                        Simpan perubahan
+                        Redirect ke transaksi.index dengan pesan sukses
+                    elif action == 'destroy':
+                        Ambil transaksi berdasarkan ID
+                        Hapus data
+                        Redirect ke transaksi.index dengan pesan sukses
+            
+        else if role == 'Member':
+            # Mulai fungsi index() Member
+            Set judul halaman: 'Produk yang tersedia'
+            Ambil semua inventaris
+            Tampilkan view 'dashboard.member' dengan pageTitle + inventaries
+            # Selesai fungsi index() Member
+            
+            # Transaksi Member
+            if akses == '/transaksi-member':
+                Set judul halaman = "Data Transaksi"
+                Ambil transaksi berdasarkan user_id yang login
+                Ambil data mitra dan inventaris
+                Tampilkan view 'transaksi.transaksiMember' dengan data dan judul
+        else:
+            tampilkan error 403 Akses Ditolak
+    else:
+        tampilkan error 'Email atau password salah'
+else:
+    tampilkan error 'Email atau password salah'

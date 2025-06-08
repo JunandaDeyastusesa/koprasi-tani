@@ -31,15 +31,12 @@ class MemberControllerTest extends TestCase
         $response = $this->get('/members');
         $response->assertStatus(200);
         $response->assertViewIs('member.index');
-        $response->assertViewHas('users', function ($users) use ($member) {
-            return $users->contains($member);
-        });
+        $response->assertViewHas('users', fn($users) => $users->contains($member));
     }
 
     public function test_index_returns_404_when_no_members()
     {
         $this->actingAsAdmin();
-
         Role::factory()->create(['nama' => 'Member']);
 
         $response = $this->get('/members');
@@ -47,10 +44,18 @@ class MemberControllerTest extends TestCase
         $response->assertJson(['message' => 'Tidak ada member ditemukan']);
     }
 
-    public function test_store_creates_new_member()
+    public function test_create_member_view()
     {
         $this->actingAsAdmin();
 
+        $response = $this->get('/members/create');
+        $response->assertStatus(200);
+        $response->assertViewIs('member.create');
+    }
+
+    public function test_store_creates_new_member()
+    {
+        $this->actingAsAdmin();
         Role::factory()->create(['nama' => 'Member']);
 
         $response = $this->post('/members', [
@@ -66,17 +71,64 @@ class MemberControllerTest extends TestCase
         $this->assertDatabaseHas('users', ['email' => 'testmember@example.com']);
     }
 
-    public function test_update_changes_member_data()
+    public function test_store_with_invalid_role_does_not_attach_role()
+    {
+        $this->actingAsAdmin();
+        Role::factory()->create(['nama' => 'Admin']);
+
+        $response = $this->post('/members', [
+            'name' => 'Another User',
+            'email' => 'another@example.com',
+            'username' => 'anotheruser',
+            'password' => 'password',
+            'password_confirmation' => 'password',
+            'role' => 'InvalidRole', // tidak valid
+        ]);
+
+        $response->assertSessionHasErrors('role');
+    }
+
+    public function test_edit_member_view()
+    {
+        $this->actingAsAdmin();
+        $user = User::factory()->create();
+
+        $response = $this->get("/members/{$user->id}/edit");
+        $response->assertStatus(200);
+        $response->assertViewIs('member.edit');
+        $response->assertViewHas('user', $user);
+    }
+
+    public function test_update_changes_member_data_with_password()
+    {
+        $this->actingAsAdmin();
+        $user = User::factory()->create([
+            'password' => Hash::make('oldpassword'),
+        ]);
+
+        $response = $this->put("/members/{$user->id}", [
+            'name' => 'Updated Name',
+            'email' => 'updated@example.com',
+            'username' => 'updatedusername',
+            'password' => 'newpassword',
+            'password_confirmation' => 'newpassword',
+        ]);
+
+        $response->assertRedirect(route('members.index'));
+        $this->assertDatabaseHas('users', ['email' => 'updated@example.com']);
+        $this->assertTrue(Hash::check('newpassword', $user->fresh()->password));
+    }
+
+    public function test_update_changes_member_data_without_password()
     {
         $this->actingAsAdmin();
 
-        $memberRole = Role::factory()->create(['nama' => 'Member']);
         $member = User::factory()->create([
             'name' => 'Old Name',
             'email' => 'old@example.com',
             'username' => 'oldusername',
+            'password' => Hash::make('oldpassword'),
         ]);
-        $member->roles()->attach($memberRole->id);
 
         $response = $this->put("/members/{$member->id}", [
             'name' => 'New Name',
@@ -88,12 +140,12 @@ class MemberControllerTest extends TestCase
 
         $response->assertRedirect(route('members.index'));
         $this->assertDatabaseHas('users', ['email' => 'new@example.com', 'name' => 'New Name']);
+        $this->assertTrue(Hash::check('oldpassword', $member->fresh()->password));
     }
 
-    public function test_destroy_deletes_member()
+    public function test_destroy_deletes_member_with_member_role()
     {
         $this->actingAsAdmin();
-
         $memberRole = Role::factory()->create(['nama' => 'Member']);
         $member = User::factory()->create();
         $member->roles()->attach($memberRole->id);
@@ -101,5 +153,25 @@ class MemberControllerTest extends TestCase
         $response = $this->delete("/members/{$member->id}");
         $response->assertRedirect(route('members.index'));
         $this->assertDatabaseMissing('users', ['id' => $member->id]);
+    }
+
+    public function test_destroy_deletes_user_without_member_role()
+    {
+        $this->actingAsAdmin();
+        $user = User::factory()->create(); // tanpa role "Member"
+
+        $response = $this->delete("/members/{$user->id}");
+        $response->assertRedirect(route('members.index'));
+        $this->assertDatabaseMissing('users', ['id' => $user->id]);
+    }
+
+    public function test_show_method_placeholder()
+    {
+        $this->actingAsAdmin();
+        $user = User::factory()->create();
+
+        // karena kosong, tetap bisa dipanggil untuk coverage
+        $response = $this->get("/members/{$user->id}");
+        $response->assertStatus(200); // Laravel akan return 200 dengan view kosong/default
     }
 }

@@ -67,4 +67,5 @@ class DashboardControllerTest extends TestCase
         $response = $this->get(route('dashboard.index'));
         $response->assertStatus(403);
     }
+
 }
