@@ -14,9 +14,6 @@ class MitraController extends Controller
     {
         $pageTitle = 'Data Mitra';
         $mitras = Mitra::all();
-        // Assuming you have a model named Mitra
-        // $mitras = Mitra::all(); // Fetch all mitra records
-        // return view('mitra.index', ['pageTitle' => $pageTitle, 'mitras' => $mitras]);
 
         // For now, just returning a view with the page title
         return view('mitra.index', ['pageTitle' => $pageTitle, 'mitras' => $mitras]);
@@ -39,10 +36,17 @@ class MitraController extends Controller
     {
         $request->validate([
             'nama' => 'required|string|max:255',
-            'email' => 'required|email|max:255|unique:mitras,email',
+            'email' => 'required|email|max:255,email',
             'no_hp' => 'required|string|max:15',
             'alamat' => 'required|string|max:255',
         ]);
+
+        if (Mitra::where('email', $request->email)->exists()) {
+            return redirect()->back()->with('error', 'Email sudah digunakan, silakan gunakan email lain.');
+        }
+        if (Mitra::where('no_hp', $request->no_hp)->exists()) {
+            return redirect()->back()->with('error', 'Nomor HP sudah digunakan, silakan gunakan nomor lain.');
+        }
 
         $mitra = new Mitra();
         $mitra->nama = $request->input('nama');
@@ -80,10 +84,17 @@ class MitraController extends Controller
     {
         $request->validate([
             'nama' => 'required|string|max:255',
-            'email' => 'required|email|max:255|unique:mitras,email,' . $id,
+            'email' => 'required|email|max:255,email,' . $id,
             'no_hp' => 'required|string|max:15',
             'alamat' => 'required|string|max:255',
         ]);
+
+        if (Mitra::where('email', $request->email)->where('id', '!=', $id)->exists()) {
+            return redirect()->back()->with('error', 'Email sudah digunakan, silakan gunakan email lain.');
+        }
+        if (Mitra::where('no_hp', $request->no_hp)->where('id', '!=', $id)->exists()) {
+            return redirect()->back()->with('error', 'Nomor HP sudah digunakan, silakan gunakan nomor lain.');
+        }
 
         $mitra = Mitra::findOrFail($id);
         $mitra->nama = $request->input('nama');

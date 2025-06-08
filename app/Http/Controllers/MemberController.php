@@ -35,21 +35,23 @@ class MemberController extends Controller
             'name'     => 'required|string|max:255',
             'email'    => 'required|email',
             'username' => 'required|string',
-            'password' => 'required|min:6|confirmed',
+            'password' => 'required|min:6',
+            'password_confirmation' => 'required',
             'role'     => 'required|in:Member,Admin',
         ]);
 
-        // Cek jika email sudah ada
         if (User::where('email', $request->email)->exists()) {
             return redirect()->back()->with('error', 'Email sudah digunakan, silakan gunakan email lain.');
         }
 
-        // Cek jika username sudah ada
         if (User::where('username', $request->username)->exists()) {
             return redirect()->back()->with('error', 'Username sudah digunakan, silakan pilih username lain.');
         }
 
-        // Simpan user baru
+        if ($request->password !== $request->password_confirmation) {
+            return redirect()->back()->with('error', 'Password tidak sesuai.');
+        }
+
         $user = User::create([
             'name'     => $request->name,
             'email'    => $request->email,
@@ -57,7 +59,6 @@ class MemberController extends Controller
             'password' => Hash::make($request->password),
         ]);
 
-        // Tambahkan role
         $role = Role::where('nama', $request->role)->first();
         if ($role) {
             $user->roles()->attach($role->id);
@@ -78,15 +79,28 @@ class MemberController extends Controller
     public function update(Request $request, $id)
     {
         $request->validate([
-            'name'     => 'required|string|max:255',
-            'email'    => 'required|email|unique:users,email,' . $id,
-            'username' => 'required|string|unique:users,username,' . $id,
-            'password' => 'nullable|min:6|confirmed',
+            'name'                  => 'required|string|max:255',
+            'email'                 => 'required|email',
+            'username'              => 'required|string',
+            'password'              => 'nullable|min:6',
+            'password_confirmation' => 'nullable',
         ]);
 
+        if (User::where('email', $request->email)->where('id', '!=', $id)->exists()) {
+            return redirect()->back()->with('error', 'Email sudah digunakan, silakan gunakan email lain.');
+        }
+
+        if (User::where('username', $request->username)->where('id', '!=', $id)->exists()) {
+            return redirect()->back()->with('error', 'Username sudah digunakan, silakan pilih username lain.');
+        }
+
+        if ($request->filled('password') && $request->password !== $request->password_confirmation) {
+            return redirect()->back()->with('error', 'Password tidak sesuai.');
+        }
+
         $user = User::findOrFail($id);
-        $user->name = $request->name;
-        $user->email = $request->email;
+        $user->name     = $request->name;
+        $user->email    = $request->email;
         $user->username = $request->username;
 
         if ($request->filled('password')) {
@@ -95,8 +109,9 @@ class MemberController extends Controller
 
         $user->save();
 
-        return redirect()->route('members.index')->with('success', 'Data berhasil diperbarui');
+        return redirect()->route('members.index')->with('success', 'Data berhasil diperbarui.');
     }
+
 
     public function destroy(string $id)
     {

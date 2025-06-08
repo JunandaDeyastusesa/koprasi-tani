@@ -16,7 +16,6 @@ class InventarisController extends Controller
         // Assuming you have a model named Inventaris
         $inventaries = Inventaris::all();
         return view('inventaris.index', ['pageTitle' => $pageTitle, 'inventaries' => $inventaries]);
-
     }
 
     /**
@@ -26,7 +25,7 @@ class InventarisController extends Controller
     {
         $pageTitle = 'Tambah Inventaris';
         $inventaries = Inventaris::all();
-        return view('inventaris.create', ['inventaries' => $inventaries,'pageTitle' => $pageTitle]);
+        return view('inventaris.create', ['inventaries' => $inventaries, 'pageTitle' => $pageTitle]);
     }
 
     /**
@@ -37,11 +36,14 @@ class InventarisController extends Controller
         $request->validate([
             'nama' => 'required|string|max:255',
             'kategori' => 'required|string|max:255',
-            'harga_jual' => 'required|integer|min:1',
-            'harga_beli' => 'required|integer|min:1',
-            'jumlah' => 'required|integer|min:1',
+            'harga_jual' => 'required|integer',
+            'harga_beli' => 'required|integer',
+            'jumlah' => 'required|integer',
             'deskripsi' => 'required|string|max:255',
         ]);
+        if ($request->input('harga_jual') < 1 || $request->input('harga_beli') < 1) {
+            return redirect()->back()->with('error', 'Harga jual dan harga beli harus lebih dari 0.');
+        }
 
         $inventaris = new Inventaris();
         $inventaris->nama = $request->input('nama');
@@ -83,11 +85,15 @@ class InventarisController extends Controller
         $request->validate([
             'nama' => 'required|string|max:255',
             'kategori' => 'required|string|max:255',
-            'harga_jual' => 'required|integer|min:1',
-            'harga_beli' => 'required|integer|min:1',
-            'jumlah' => 'required|integer|min:1',
+            'harga_jual' => 'required|integer',
+            'harga_beli' => 'required|integer',
+            'jumlah' => 'required|integer',
             'deskripsi' => 'required|string|max:255',
         ]);
+
+        if ($request->input('harga_jual') < 1 || $request->input('harga_beli') < 1) {
+            return redirect()->back()->with('error', 'Harga jual dan harga beli harus lebih dari 0.');
+        }
 
         $inventaris = Inventaris::findOrFail($id);
         $inventaris->nama = $request->input('nama');
@@ -100,6 +106,7 @@ class InventarisController extends Controller
 
         return redirect()->route('inventaris.index')->with('success', 'Data berhasil diupdate.');
     }
+
 
     /**
      * Remove the specified resource from storage.
